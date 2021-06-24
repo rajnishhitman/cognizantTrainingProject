@@ -2,6 +2,7 @@
 const exp = require('express');
 const app = exp();
 const path = require("path")
+require('dotenv').config()
 
 //connecting built of react with current server
 app.use(exp.static(path.join(__dirname, './build/')))
@@ -23,7 +24,7 @@ const mongoClient = require("mongodb").MongoClient;
 
 //db connectivity
 //db connection url
-const dburl = "mongodb+srv://cognizantTraining:cognizantTraining@cluster0.jkagd.mongodb.net/cognizantTraining?retryWrites=true&w=majority"
+const dburl = process.env.DATABASE_URL;
 
 
 //database obj
@@ -39,12 +40,14 @@ mongoClient.connect(dburl, {useNewUrlParser:true,useUnifiedTopology:true}, (err,
         let usercollectionObject=databaseObject.collection("usercollection")
         let admincollectionObject=databaseObject.collection("admincollection")
         let productcollectionObject=databaseObject.collection("productcollection")
+        let usercartcollectionObject=databaseObject.collection("usercartcollection")
         
 
         //sharing collection object
         app.set("usercollectionObject", usercollectionObject)
         app.set("admincollectionObject", admincollectionObject)
         app.set("productcollectionObject", productcollectionObject)
+        app.set("usercartcollectionObject", usercartcollectionObject)
 
 
         console.log("DB connection success")
@@ -81,5 +84,5 @@ app.use((err, req, res, next) =>{
 
 
 //assign port 
-const port = 8080;
+const port = process.env.PORT;
 app.listen(port, () => console.log(`server listening on port ${port}..`))

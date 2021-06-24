@@ -1,6 +1,6 @@
 import{ useEffect, useState } from "react";
 
-const ProductsList = () => {
+const ProductsList = (props) => {
 
 
     let [products, setProducts] = useState([])
@@ -41,6 +41,7 @@ const ProductsList = () => {
                                 <h6 className="card-title">{product.model}</h6>
                                 <p className="card-text">Price - {product.price}</p>
                                 <p className="card-text">Description - {product.description}</p>
+                                <button className="btn btn-primary float-end" onClick={()=>props.addProductToCart(product)}>Add to cart</button>
                             </div>
                         </div>
 
