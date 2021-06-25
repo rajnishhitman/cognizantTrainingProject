@@ -1,46 +1,51 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useRef} from 'react'
 import { useParams } from 'react-router-dom';
 
 import React from 'react'
 import {BrowserRouter, Switch, Link, Route} from 'react-router-dom';
 import ProductsList from './ProductsList';
-// import AddProduct from './AddProduct';
+
 import UserCart from './UserCart';
-import axios from 'axios';
-// import { response } from 'express';
-// import { useHistory } from 'react-router-dom';
-// const axios = require('axios');
+// import axios from 'axios';
+
 
 const Userprofile = () => {
-    // const history = useHistory();
-    let [user, setUser] = useState(''
-        // {
-        //     email: "Please wait"
-        // }
-    )
-    let [usercart, setUserCart] = useState('')
+    let [cnt, setCnt] = useState(0)
 
-    let [products, setProducts] = useState('')
+    let [user, setUser] = useState('')
+    const ref = useRef(null);
 
 
-    //function to make post tp usercart api
-    const addProductToCart=(productObj)=>{
-        //get username from localhost
-        let username = localStorage.getItem("username")
 
-        //add username to product object
-        productObj.username=username;
 
-        console.log("product added by user ",productObj)
-        // make post req
-        axios.post("/user/addtocart",productObj)
-        .then(res=>{
-            let responseObj = res.data
-            alert(responseObj.message)
-        })
-        .catch(err=>{
-            alert("something went wrong in adding product to cart")
-        })
+    // //function to make post tp usercart api
+    // const addProductToCart=(productObj)=>{
+
+
+    //     //get username from localhost
+    //     let username = localStorage.getItem("username")
+    //     let proObj={
+    //         username: username,
+    //         productObj: productObj
+    //     }
+
+
+    //     console.log("product added by user ",proObj)
+
+    //     // make post req
+    //     axios.post("/user/addtocart",proObj)
+    //     .then(res=>{
+    //         let responseObj = res.data
+    //         alert(responseObj.message)
+    //         setCnt(responseObj.proCnt)
+    //     })
+    //     .catch(err=>{
+    //         alert("something went wrong in adding product to cart")
+    //     })
+
+    // }
+    const updateCnt = (n) => {
+      setCnt(n)
     }
 
 
@@ -50,46 +55,36 @@ const Userprofile = () => {
     let paramObj = useParams();//{username: "Vikash"}
 
     useEffect(() => {
-        // axios.get(`/user/getuser/${paramObj.username}`)
-        // .then(res => {
-        //     let userObj = res.data.message;
-        //     // setUser({ ...userObj })
-        //     setUser(userObj)
-        //     // console.log(userObj)
-        // })
-        //json.parse will convert json into js object
+        fetch(`/user/usercart/${paramObj.username}`)
+        .then(response => response.json())
+        .then(json => {
+            const arObj = json.message
+            console.log(arObj.length)
+            setCnt(arObj.length)
+            // setProducts(arObj)
+        })
+
         let userObj = JSON.parse(localStorage.getItem('user'))
         setUser({...userObj})
 
+        setTimeout(() => {
+          ref.current.click();
+        }, 100);
 
-        // fetch("/product/getproducts")
-        // .then(response => response.json())
-        // .then(json => {
-        //     const arObj = json.message
-        //     setProducts(arObj)
-        //     // console.log(json)
-        //     console.log(arObj)
-        // })
 
 
     },[paramObj.username])
 
-    // const logout = () => {
-    //     history.push('/login')
-    //     localStorage.removeItem('token')
-    // }
+
 
 
     return (
         <>
         <div>
-            <h5 className="text-start">Welcome ,<span className="text-success">{paramObj.username}</span></h5>
-            <div className="text-center">
-                <h3>{user.email}</h3>
-                <h3>{user.dob}</h3>
-                <img src={user.profileImage} width="100px" alt="" />
-            </div>
-           
+            <h5 className="text-start">Welcome ,<span className="text-success">{paramObj.username}</span>
+                <img className="rounded-circle" src={user.profileImage} width="100px" alt="" />
+            </h5>
+
         </div>
 
         <BrowserRouter>
@@ -100,10 +95,10 @@ const Userprofile = () => {
         
           
           <li className="nav-item">
-           <Link to="/products/productlist" className="nav-link">View Products</Link>
+           <Link to="/products/productlist" ref={ref} className="nav-link">View Products</Link>
           </li>
           <li className="nav-item">
-           <Link to="/usercart" className="nav-link">Cart</Link>
+           <Link to="/usercart" className="nav-link">Cart <span className="text-info">{cnt}</span></Link>
           </li>
     
           
@@ -118,50 +113,16 @@ const Userprofile = () => {
           </Route> */}
 
           <Route path="/products/productlist">
-            <ProductsList addProductToCart={addProductToCart}/>
+            <ProductsList updateCnt={updateCnt} param="user"/>
           </Route>
           <Route path="/usercart">
-            <UserCart/>
+            <UserCart paramObj={paramObj}/>
           </Route>
          
         </Switch>
       
       </div>
     </BrowserRouter>
-
-
-        {/* <ProductsList/> */}
-
-
-        {/* <div className="container row d-flex justify-content-center ms-5">
-        {
-            products.map((product)=>{
-                // return(
-                //     <div>
-                //         <h6>{product.name}</h6>
-                //         <h6>{product.price}</h6>
-                //         <img src={product.Image} width="200px" alt="" />
-                //     </div>
-                // )
-
-                return(
-
-                        <div className="card m-5 col-4 shadow" style={{width: "20rem"}}>
-                            <div class="card-header">
-                                <img src={product.Image} width="100" className="card-img-top" alt=""/>
-                            </div>
-                            <div className="card-body">
-                                <h4 className="card-title">{product.productname}</h4>
-                                <h6 className="card-title">{product.model}</h6>
-                                <p className="card-text">Price - {product.price}</p>
-                                <p className="card-text">Description - {product.description}</p>
-                            </div>
-                        </div>
-
-                )
-            })
-        }
-        </div> */}
         </>
 
     )

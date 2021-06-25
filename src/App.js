@@ -39,10 +39,15 @@ function App() {
           }
           
 
-          
-          <li className="nav-item">
+          {
+            !userLoginStatus &&
+            <li className="nav-item">
+              <Link to="/register" className="nav-link">Register</Link>
+            </li>
+          }
+          {/* <li className="nav-item">
             <Link to="/register" className="nav-link">Register</Link>
-          </li>
+          </li> */}
           <li className="nav-item">
             <Link to="/allusers" className="nav-link">AllUsersList</Link>
           </li>

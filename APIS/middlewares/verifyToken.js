@@ -4,8 +4,8 @@ const checkToken = (req, res, next) => {
 
     try{
         let token = req.headers.authorization.split(" ")[1]
-        jwt.verify(token, 'abcdef')
-        // console.log(token)
+        console.log(jwt.verify(token, 'abcdef'))
+        // console.log("verifying the token",token)
         next()
     }
     catch(err){

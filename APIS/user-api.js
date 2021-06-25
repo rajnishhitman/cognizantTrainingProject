@@ -464,10 +464,12 @@ userApi.post("/login",expressErrorHandler(async(req,res,next)=>{
         //if password matched
         else{
             //create a token and send it as res
-            let token = await jwt.sign({username:credentials.username},process.env.SECRET,{expiresIn:"20"})
+            let token = await jwt.sign({username:credentials.username},process.env.SECRET,{expiresIn: 10})
+            // console.log(token)
 
             //remove password from user
             delete user.password; 
+            // console.log(user)
             
             // console.log("token is ",token)
             res.send({message: "login-success", token:token, username:credentials.username, userObj: user})
@@ -493,22 +495,71 @@ userApi.post("/addtocart", expressErrorHandler(async(req,res,next)=>{
         products.push(userCartObj.productObj)
         let newUserCartObject = {username: userCartObj.username, products: products };
 
-        console.log(newUserCartObject)
+        // console.log(newUserCartObject)
         //insert
         await userCartCollectionObject.insertOne(newUserCartObject)
-        res.send({message: "Product added to cart"})
+        res.send({message: "Product added to cart", proCnt: 1})
     }
     //if user already existed in cart
     else{
 
         userInCart.products.push(userCartObj.productObj)
-        console.log(userInCart)
+        // console.log(userInCart)
 
         //update
         await userCartCollectionObject.updateOne({username: userCartObj.username}, {$set:{...userInCart}})
-        res.send({message: "Product added to cart"})
+        res.send({message: "Product added to cart", proCnt: userInCart.products.length})
     }
 }))
+
+
+
+//get logged in user's cart products
+userApi.get("/usercart/:username",expressErrorHandler(async(req, res) => {
+    let userCartCollectionObject = req.app.get("usercartcollectionObject")
+
+    //get logged in user 
+    let loggedUser = req.params.username;
+
+    // console.log("hello i am logged in user",loggedUser)
+
+    //find user in usercartcollection
+    let userInCart = await userCartCollectionObject.findOne({username: loggedUser})
+    // console.log(userInCart)
+
+    if(userInCart!== null){
+        res.send({message: userInCart.products})
+    }
+}))
+
+
+
+
+// userApi.delete("/usercart/:username/:proId",expressErrorHandler(async(req, res) => {
+//     let userCartCollectionObject = req.app.get("usercartcollectionObject")
+
+//     //get logged in user 
+//     let loggedUser = req.params.username;
+
+//     //get model name of product which is going to delete
+//     let delProId = req.params.proId;
+
+//     // console.log("hello i am logged in user",loggedUser)
+//     // console.log("hello i am going to delete from cart",delProModel)
+
+//     let pCart = await userCartCollectionObject.updateOne({username: loggedUser}, { $pull: {products: { dt: delProId}}})
+
+//     let userCart = await userCartCollectionObject.findOne({username: loggedUser})
+
+
+//     console.log(userCart)
+
+
+
+//     if(pCart!== null){
+//         res.send({message: "product removed from cart", products: userCart.products})
+//     }
+// }))
 
 
 

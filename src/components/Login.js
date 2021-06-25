@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from 'react-router-dom';
+// import UserCart from "./UserCart";
 
 
 const Login = (props) => {
@@ -36,6 +37,7 @@ const Login = (props) => {
                     if(credentials.type === "user") {
                         //navigate to user profile
                         history.push(`/userprofile/${resObj.username}`)
+                        // history.push("/usercart", {paramObj: {username: resObj.username}})
                     }
 
                     if(credentials.type === "admin"){

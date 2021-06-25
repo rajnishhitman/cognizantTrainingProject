@@ -6,15 +6,11 @@ const axios = require('axios');
 
 
 const AddProduct = () => {
-
-
     const { register, handleSubmit } = useForm();
     const [file, setFile] = useState('')
     const history = useHistory();
 
-    const onFormSubmit = (productObj) => {
-       
-
+    const onFormSubmit = async(productObj) => {
 
         //create FormData obj
         let formData = new FormData();
@@ -65,7 +61,7 @@ const AddProduct = () => {
             <input className="form-control mb-3" type="text" placeholder="Description" name="description" autoComplete="off" {...register('description')}/>
             
 
-            <input type="file" name="photo" className="form-control mb-3" onChange={(e) => {onFileSelect(e)}} />
+            <input type="file" name="photo" className="form-control mb-3" onChange={(e) => {onFileSelect(e) }} />
 
             <input className="btn btn-success" type="submit" />
 
