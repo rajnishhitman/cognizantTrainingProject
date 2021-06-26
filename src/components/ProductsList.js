@@ -49,7 +49,7 @@ const ProductsList = (props) => {
         <div>
         {
         props.param==="user"?
-        <div className="container row d-flex justify-content-center ms-5">
+        <div className="container row d-flex justify-content-center">
         {
             products.map((product)=>{
 
@@ -75,7 +75,7 @@ const ProductsList = (props) => {
             })
         }
         </div>:
-        <div className="container row d-flex justify-content-center ms-5">
+        <div className="container row d-flex justify-content-center">
         {
             products.map((product)=>{
 
