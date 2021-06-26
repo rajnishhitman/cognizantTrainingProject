@@ -82,7 +82,7 @@ const Userprofile = () => {
         <>
         <div>
             <h5 className="text-start">Welcome ,<span className="text-success">{paramObj.username}</span>
-                <img className="rounded-circle" src={user.profileImage} width="100px" alt="" />
+                <img className="rounded m-1" src={user.profileImage} width="100px" alt="" />
             </h5>
 
         </div>
