@@ -84,5 +84,5 @@ app.use((err, req, res, next) =>{
 
 
 //assign port 
-const port = process.env.PORT;
+const port = process.env.PORT||8080;
 app.listen(port, () => console.log(`server listening on port ${port}..`))
